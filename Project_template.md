@@ -5,7 +5,7 @@
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
 Результат представьте в виде контейнерной диаграммы в нотации С4.
 Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
+![Диаграмма контейнеров Кинобездны](./schemas/task1_container.png)
 
 
 ## Задание 2
@@ -58,6 +58,9 @@
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
+
+![Kafka topics](./screenshots/kafka_topics.png)
+![Скриншот тестов](./screenshots/local_tests_run.png)
 
 
 ## Задание 3
@@ -264,6 +267,8 @@ cat .docker/config.json | base64
   Вы должны увидеть вывод списка фильмов
   Можно поэкспериментировать со значением   MOVIES_MIGRATION_PERCENT в src/kubernetes/configmap.yaml и убедится, что вызовы movies уходят полностью в новый сервис
 
+![Скриншот вывода АПИ movies](./screenshots/movies_browser_1.png)
+
   12. Запустите тесты из папки tests/postman
   ```bash
    npm run test:kubernetes
@@ -274,6 +279,8 @@ cat .docker/config.json | base64
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+![Скриншот запуска тестов](./screenshots/kube_tests_run.png)
+![Скриншот логов events-service](./screenshots/events_log.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -349,6 +356,8 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+![Скриншот развертывания Helm](./screenshots/helm_deploy.png)
+![Скриншот браузера с АПИ movies](./screenshots/movies_browser_2.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
@@ -414,6 +423,9 @@ You can see 21 for the upstream_rq_pending_overflow value which means 21 calls s
 ```
 
 Приложите скриншот работы circuit breaker'а
+
+![Скриншот работы circuit breaker'a](./screenshots/fortio_cb.png)
+
 
 Удаляем все
 ```bash

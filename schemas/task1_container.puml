@@ -1,0 +1,58 @@
+@startuml
+title Архитектура проекта "Кинобездна"
+
+top to bottom direction
+
+!define RELATIVE_INCLUDE .
+!include C4_templates/C4_Component.puml
+
+Person(user, "Пользователь", "Пользователь сервисов компании Кинобездна")
+Boundary(system, "Кинобездна: основная система") {
+    Container(webapp, "Web App", "Web-Портал")
+    Container(mobapp, "Mobile App", "Мобильное приложение")
+    Container(smarttv, "Smart TV", "Смарт-телевизор")
+    Container(gateway, "API Gateway", "Маршрутизатор")
+    Container(users, "Profile API", "Управление пользователями и подписками")
+    Container(catalog, "Catalog API", "Основной сервис, представляет собой каталог контента")
+    Container(metadata, "Metadata API", "Управление метаданными")
+    Container(video, "Video API", "Сервис предоставления видео-контента")
+    Container(rabbit, "Rabbit MQ", "Брокер для взаимодействия с рекомендательной системой")
+    Container(kafka, "Apache Kafka", "Брокер для асинхронного взаимодействия между сервисами")
+    ContainerDb(users_db, "Хранение пользователей и подписок", "PostgreSQL")
+    ContainerDb(metadata_db, "Хранение метаданных", "PostgreSQL")
+    ContainerDb(video_db, "Хранение видео-контента", "S3 storage")
+}
+System_Ext(loyalty_service, "Сервис лояльности", "Датчики управления устройствами (реле управления)")
+System_Ext(payment_service, "Платежный сервис", "Сервис обработки платежей за подписку")
+System_Ext(marketplace_service, "Маркетплейс", "Датчики сбора телеметрии")
+System_Ext(recommendation_service, "Сервис рекомендаций", "Датчики сбора телеметрии")
+System_Ext(cinema_service, "Онлайн кинотеатры", "Сторонние онлайн кинотеатры")
+
+Rel(user, webapp, "Взаимодействует с системой через web-портал")
+Rel(user, mobapp, "Взаимодействует с системой через мобильное приложение")
+Rel(user, smarttv, "Взаимодействует с системой через Смарт ТВ")
+
+Rel(webapp, gateway, "Взаимодействует через API шлюз")
+Rel(mobapp, gateway, "Взаимодействует через API шлюз")
+Rel(smarttv, gateway, "Взаимодействует через API шлюз")
+
+Rel(gateway, users, "Регистрация и аутентификация пользователей, подключение подписок")
+Rel(gateway, catalog, "Просмотр и выбор доступного контента")
+Rel(gateway, video, "Запрос и просмотр видео-контента")
+Rel(catalog, metadata, "Загрузка метаданных контента")
+
+Rel(metadata, metadata_db, "Забирает данные из базы")
+Rel(users, users_db, "Забирает информацию о пользователях и подписках")
+Rel(users, payment_service, "Использует внешний сервис для оплаты подписок")
+Rel(users, loyalty_service, "Использует внешний сервис для программ лояльности")
+Rel(users, marketplace_service, "Взаимодействует с маркетом")
+Rel(video, video_db, "Забирает видео-контент из хранилища")
+Rel(video, cinema_service, "Перенаправляет на внешний сервис")
+Rel(catalog, rabbit, "Запрашивает информацию из рекомендательной системы")
+Rel(rabbit, recommendation_service, "Взаимодействует с рекомендательной системой")
+Rel(video, kafka, "Передает информацию о видео контенте")
+Rel(users, kafka, "Передает информацию о пользователях и подписках")
+Rel(kafka, catalog, "Получает информацию о пользователях, подписках и видео-контенте")
+
+
+@enduml
